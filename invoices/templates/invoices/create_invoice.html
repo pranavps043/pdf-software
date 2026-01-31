@@ -1,0 +1,162 @@
+{% extends 'invoices/base.html' %} {% block content %}
+<div class="row justify-content-center w-100">
+  <div class="col-md-10 col-lg-8">
+    <div class="card shadow border-0 rounded-4">
+      <div class="card-body p-4">
+        <h4 class="card-title text-center mb-1 fw-bold text-dark">
+          {{ title|default:"Add Quotation" }}
+        </h4>
+        <p class="text-center text-muted small mb-3">Enter details below</p>
+
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="row g-2">
+            <!-- g-2 for tighter gutters -->
+            <div class="col-md-6 mb-1">
+              <label class="form-label small fw-bold mb-1">Client Name</label>
+              {{ form.client_name }}
+            </div>
+
+            <div class="col-md-6 mb-1">
+              <label class="form-label small fw-bold mb-1">Reference No</label>
+              {{ form.reference_no }}
+            </div>
+
+            <div class="col-md-6 mb-1">
+              <label class="form-label small fw-bold mb-1">Mobile Number</label>
+              {{ form.mobile_number }}
+            </div>
+
+            <div class="col-md-6 mb-1">
+              <label class="form-label small fw-bold mb-1">Amount (AED)</label>
+              {{ form.amount }}
+            </div>
+
+            <div class="col-md-6 mb-1">
+              <label class="form-label small fw-bold mb-1">Date</label>
+              {{ form.date }}
+            </div>
+
+            <div class="col-md-6 mb-1">
+              <label class="form-label small fw-bold mb-1">Subject</label>
+              {{ form.subject }}
+            </div>
+
+            <div class="col-12 mb-1">
+              <label class="form-label small fw-bold mb-1">Address</label>
+              {{ form.address }}
+            </div>
+
+            <div class="col-12 mb-2">
+              <label class="form-label small fw-bold mb-1"
+                >Work Description</label
+              >
+              {{ form.work_description }}
+            </div>
+          </div>
+
+          <div class="d-grid mt-2">
+            <button type="submit" class="btn btn-primary fw-bold py-2">
+              Save Quotation
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+{% if created_invoice %}
+<div
+  class="modal fade"
+  id="successModal"
+  tabindex="-1"
+  aria-labelledby="successModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="successModalLabel">Success!</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body text-center py-4">
+        <div class="mb-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="64"
+            height="64"
+            fill="currentColor"
+            class="bi bi-check-circle-fill text-success"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+            />
+          </svg>
+        </div>
+        <h5 class="fw-bold mb-3">Quotation Created Successfully!</h5>
+        <p class="mb-4 text-dark">
+         
+          <strong>Client:</strong> {{ created_invoice.client_name|default:"-" }}
+        </p>
+
+        <div class="d-grid gap-2 col-10 mx-auto">
+          <a
+            href="{% url 'generate_quotation' created_invoice.id %}"
+            class="btn btn-primary fw-bold"
+            target="_blank"
+          >
+            <i class="bi bi-file-earmark-pdf me-2"></i>Download Quotation PDF
+          </a>
+          <a
+            href="{% url 'generate_pdf' created_invoice.id %}"
+            class="btn btn-outline-primary fw-bold"
+            target="_blank"
+          >
+            <i class="bi bi-file-earmark-text me-2"></i>Download Invoice PDF
+          </a>
+          <hr />
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm"
+            data-bs-dismiss="modal"
+          >
+            Create New Quotation
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      // Form styling
+      var inputs = document.querySelectorAll('input, select, textarea');
+      inputs.forEach(function(input) {
+          input.classList.add('form-control', 'form-control-sm');
+          input.style.backgroundColor = "#f8f9fa";
+      });
+
+      var textareas = document.querySelectorAll('textarea');
+      textareas.forEach(function(textarea) {
+          textarea.rows = 2;
+      });
+
+      // Show Success Modal if it exists
+      {% if created_invoice %}
+          var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+          successModal.show();
+      {% endif %}
+  });
+</script>
+{% endblock %}

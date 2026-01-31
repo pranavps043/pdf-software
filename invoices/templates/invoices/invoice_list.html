@@ -1,0 +1,154 @@
+{% extends 'invoices/base.html' %} {% block content %}
+<div class="row justify-content-center w-100">
+  <div class="col-md-12 col-lg-10">
+    <div class="card shadow border-0 rounded-4">
+      <div class="card-body p-4">
+        <!-- Header -->
+        <div
+          class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3"
+        >
+          <h4 class="card-title fw-bold text-dark m-0">Quotation List</h4>
+          <a
+            href="{% url 'invoice_create' %}"
+            class="btn btn-primary btn-sm fw-bold"
+          >
+            + New Quotation
+          </a>
+        </div>
+
+        <!-- Search and Filter -->
+        <form method="get" class="mb-4" id="filterForm">
+          <div class="row g-2 align-items-center">
+            <div class="col-md-5">
+              <div class="form-floating">
+                <input
+                  type="text"
+                  name="search"
+                  id="searchInput"
+                  class="form-control"
+                  placeholder="Search..."
+                  value="{{ search_query }}"
+                />
+                <label for="searchInput" class="text-muted"
+                  ><i class="bi bi-search me-1"></i>Search Client, Invoice
+                  No...</label
+                >
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-floating">
+                <input
+                  type="date"
+                  name="date_from"
+                  id="dateFrom"
+                  class="form-control"
+                  value="{{ date_from }}"
+                />
+                <label for="dateFrom" class="text-muted">From Date</label>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-floating">
+                <input
+                  type="date"
+                  name="date_to"
+                  id="dateTo"
+                  class="form-control"
+                  value="{{ date_to }}"
+                />
+                <label for="dateTo" class="text-muted">To Date</label>
+              </div>
+            </div>
+
+            <div class="col-md-1 d-grid">
+              <a
+                href="{% url 'invoice_list' %}"
+                class="btn btn-light border h-100 d-flex align-items-center justify-content-center"
+                title="Clear Filters"
+              >
+                <i class="bi bi-x-lg text-muted"></i>
+              </a>
+            </div>
+          </div>
+        </form>
+
+        <!-- Table Container -->
+        <div id="invoice-table-container">
+          {% include 'invoices/partials/invoice_table_partial.html' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("filterForm");
+    const tableContainer = document.getElementById("invoice-table-container");
+    const inputs = form.querySelectorAll("input");
+
+    // Debounce function
+    function debounce(func, timeout = 300) {
+      let timer;
+      return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          func.apply(this, args);
+        }, timeout);
+      };
+    }
+
+    // Function to fetch updated table
+    function fetchTable(url = null) {
+      const formData = new FormData(form);
+      const params = new URLSearchParams(formData);
+
+      // If a URL is provided (for pagination), use it but preserve current filter params if needed
+      // But typically for pagination updates we want the URL from the link
+      let fetchUrl = url
+        ? url
+        : `${window.location.pathname}?${params.toString()}`;
+
+      fetch(fetchUrl, {
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      })
+        .then((response) => response.text())
+        .then((html) => {
+          tableContainer.innerHTML = html;
+          // Re-attach pagination listeners since HTML was replaced
+          attachPaginationListeners();
+        })
+        .catch((error) => console.error("Error:", error));
+    }
+
+    // Attach listeners to inputs
+    const debouncedFetch = debounce(() => fetchTable());
+
+    inputs.forEach((input) => {
+      input.addEventListener("input", debouncedFetch);
+      input.addEventListener("change", debouncedFetch);
+    });
+
+    // Pagination Click Handling
+    function attachPaginationListeners() {
+      const paginationLinks = tableContainer.querySelectorAll(".page-link");
+      paginationLinks.forEach((link) => {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          const url = this.getAttribute("href");
+          if (url && url !== "#") {
+            fetchTable(url);
+          }
+        });
+      });
+    }
+
+    // Initial attachment
+    attachPaginationListeners();
+  });
+</script>
+{% endblock %}

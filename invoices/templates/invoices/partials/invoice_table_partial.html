@@ -1,0 +1,121 @@
+{% if invoices.paginator.count %}
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>Client</th>
+        <th>Invoice No</th>
+        <th>Ref No</th>
+        <th>Date</th>
+        <th>Amount (AED)</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for invoice in invoices %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ invoice.client_name }}</td>
+        <td>
+          <span class="badge bg-light text-dark border">
+            {{ invoice.invoice_number }}
+          </span>
+        </td>
+        <td>{{ invoice.reference_no }}</td>
+        <td>{{ invoice.date|date:"M d, Y" }}</td>
+        <td class="fw-bold">{{ invoice.amount }}</td>
+        <td>
+          <div class="d-flex gap-2">
+            <div class="btn-group btn-group-sm">
+              <a
+                href="{% url 'generate_pdf' invoice.id %}"
+                class="btn btn-outline-primary"
+                >Inv</a
+              >
+              <a
+                href="{% url 'generate_quotation' invoice.id %}"
+                class="btn btn-primary"
+                >Qt</a
+              >
+            </div>
+            <a
+              href="{% url 'invoice_update' invoice.id %}"
+              class="btn btn-outline-secondary btn-sm"
+              >Edit</a
+            >
+            <a
+              href="{% url 'invoice_delete' invoice.id %}"
+              class="btn btn-outline-danger btn-sm"
+              >Del</a
+            >
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="text-center py-5">
+  <p class="text-muted">No quotations found.</p>
+  <a href="{% url 'invoice_create' %}" class="btn btn-primary btn-sm">
+    Create First Quotation
+  </a>
+</div>
+{% endif %}
+
+<!-- Pagination -->
+{% if invoices.has_other_pages %}
+<nav class="mt-4">
+  <ul class="pagination justify-content-center">
+    <!-- Previous -->
+    {% if invoices.has_previous %}
+    <li class="page-item">
+      <a
+        class="page-link"
+        href="?page={{ invoices.previous_page_number }}&search={{ search_query }}&date_from={{ date_from }}&date_to={{ date_to }}"
+      >
+        &laquo;
+      </a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+      <span class="page-link">&laquo;</span>
+    </li>
+    {% endif %}
+
+    <!-- Page Numbers -->
+    {% for i in invoices.paginator.page_range %} {% if invoices.number == i %}
+    <li class="page-item active">
+      <span class="page-link">{{ i }}</span>
+    </li>
+    {% else %}
+    <li class="page-item">
+      <a
+        class="page-link"
+        href="?page={{ i }}&search={{ search_query }}&date_from={{ date_from }}&date_to={{ date_to }}"
+      >
+        {{ i }}
+      </a>
+    </li>
+    {% endif %} {% endfor %}
+
+    <!-- Next -->
+    {% if invoices.has_next %}
+    <li class="page-item">
+      <a
+        class="page-link"
+        href="?page={{ invoices.next_page_number }}&search={{ search_query }}&date_from={{ date_from }}&date_to={{ date_to }}"
+      >
+        &raquo;
+      </a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+      <span class="page-link">&raquo;</span>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}

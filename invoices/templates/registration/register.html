@@ -1,0 +1,69 @@
+{% comment %} {% extends 'invoices/base.html' %} {% block content %}
+<div
+  class="row justify-content-center w-100 align-items-center"
+  style="min-height: 80vh"
+>
+  <div class="col-md-6 col-lg-5">
+    <div class="card shadow border-0 rounded-4">
+      <div class="card-body p-5">
+        <div class="text-center mb-4">
+          <h3 class="fw-bold text-primary">Create Account</h3>
+          <p class="text-muted small">Join us to manage your invoices</p>
+        </div>
+
+        <form method="post">
+          {% csrf_token %} {% if form.non_field_errors %}
+          <div class="alert alert-danger small p-2 mb-3">
+            {% for error in form.non_field_errors %} {{ error }} {% endfor %}
+          </div>
+          {% endif %} {% for field in form %}
+          <div class="mb-3">
+            <label
+              for="{{ field.id_for_label }}"
+              class="form-label small fw-bold text-muted"
+              >{{ field.label }}</label
+            >
+            <!-- Add form-control class to input rendered by Django -->
+            <div class="form-control-wrapper">{{ field }}</div>
+            {% if field.help_text %}
+            <div class="form-text small">{{ field.help_text|safe }}</div>
+            {% endif %} {% for error in field.errors %}
+            <div class="text-danger small mt-1">{{ error }}</div>
+            {% endfor %}
+          </div>
+          {% endfor %}
+
+          <div class="d-grid mb-3 mt-4">
+            <button type="submit" class="btn btn-primary fw-bold py-2">
+              Sign Up
+            </button>
+          </div>
+
+          <div class="text-center">
+            <p class="small text-muted mb-0">
+              Already have an account?
+              <a href="{% url 'login' %}" class="text-decoration-none fw-bold"
+                >Sign In</a
+              >
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Add Bootstrap styling to Django's default UserCreationForm fields
+  document.addEventListener("DOMContentLoaded", function () {
+    var inputs = document.querySelectorAll(".form-control-wrapper input");
+    inputs.forEach(function (input) {
+      input.classList.add("form-control");
+    });
+    var helpTexts = document.querySelectorAll(".helptext"); // Django's default helptext class
+    helpTexts.forEach(function (span) {
+      span.classList.add("d-block", "small", "text-muted", "mt-1");
+    });
+  });
+</script>
+{% endblock %} {% endcomment %}
