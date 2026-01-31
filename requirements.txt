@@ -1,3 +1,4 @@
 django
 mysqlclient
 xhtml2pdf
+whitenoise
