@@ -13,6 +13,8 @@ urlpatterns = [
     path('generate-quotation/<int:pk>/', views.generate_quotation, name='generate_quotation'),
     path('update/<int:pk>/', views.invoice_update, name='invoice_update'),
     path('delete/<int:pk>/', views.invoice_delete, name='invoice_delete'),
+    path('analytics/', views.analytics_view, name='analytics'),
+    path('analytics/export/', views.export_analytics_csv, name='export_analytics_csv'),
     
     # Auth URLs
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),

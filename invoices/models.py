@@ -24,3 +24,4 @@ class Invoice(models.Model):
 
     def __str__(self):
         return f"{self.reference_no} - {self.client_name}"
+

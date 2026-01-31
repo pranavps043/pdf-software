@@ -18,64 +18,451 @@
       rel="stylesheet"
     />
     <style>
+      :root {
+        --sidebar-width: 260px;
+        --sidebar-bg: #ffffff;
+        --sidebar-border: #e5e7eb;
+        --body-bg: #f8fafc;
+        --card-bg: #ffffff;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --nav-link: #475569;
+        --nav-link-hover-bg: #f1f5f9;
+        --nav-link-active-bg: #eef2ff;
+        --nav-link-active-color: #4f46e5;
+        --accent-color: #4f46e5;
+        --input-bg: #ffffff;
+        --input-border: #e2e8f0;
+        --transition: all 0.2s ease-in-out;
+      }
+
+      [data-bs-theme="dark"] {
+        --sidebar-bg: #0f172a;
+        --sidebar-border: #1e293b;
+        --body-bg: #020617;
+        --card-bg: #1e293b;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --nav-link: #94a3b8;
+        --nav-link-hover-bg: #1e293b;
+        --nav-link-active-bg: #312e81;
+        --nav-link-active-color: #e0e7ff;
+        --accent-color: #818cf8;
+        --input-bg: #1e293b;
+        --input-border: #334155;
+      }
+
       body {
         font-family: "Inter", sans-serif;
-        background-color: #f3f4f6;
+        background-color: var(--body-bg);
+        color: var(--text-main);
         min-height: 100vh;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        overflow-x: hidden;
+        transition: var(--transition);
       }
-      .main-container {
-        flex: 1;
+
+      .sidebar {
+        width: var(--sidebar-width);
+        height: 100vh;
+        background-color: var(--sidebar-bg);
+        border-right: 1px solid var(--sidebar-border);
         display: flex;
         flex-direction: column;
-        justify-content: center; /* Vertically center content */
-        padding-top: 20px;
-        padding-bottom: 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding: 2rem 1.25rem;
+        flex-shrink: 0;
+        overflow-y: auto;
+        z-index: 1000;
+        transition: var(--transition);
       }
+
+      .main-container {
+        flex: 1;
+        padding: 2rem;
+        margin-left: var(--sidebar-width);
+        width: calc(100% - var(--sidebar-width));
+        max-width: 100%;
+        transition: var(--transition);
+      }
+
+      @media (max-width: 767.98px) {
+        .main-container {
+          margin-left: 0;
+          width: 100%;
+          padding: 1rem;
+        }
+      }
+
+      .nav-link {
+        color: var(--nav-link);
+        padding: 0.875rem 1rem;
+        border-radius: 0.75rem;
+        margin-bottom: 0.5rem;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+        font-weight: 500;
+      }
+
+      .nav-link:hover {
+        background-color: var(--nav-link-hover-bg);
+        color: var(--text-main);
+      }
+
+      .nav-link.active {
+        background-color: var(--nav-link-active-bg);
+        color: var(--nav-link-active-color);
+        font-weight: 600;
+      }
+
+      .nav-link i {
+        font-size: 1.25rem;
+      }
+
       .navbar-brand {
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: var(--accent-color) !important;
+        padding: 0 1rem;
+        margin-bottom: 2.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+      }
+
+      .user-profile {
+        margin-top: auto;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--sidebar-border);
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+      }
+
+      .user-avatar {
+        width: 44px;
+        height: 44px;
+        background-color: var(--nav-link-active-bg);
+        color: var(--nav-link-active-color);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         font-weight: 700;
-        color: #4f46e5 !important;
+        font-size: 1.1rem;
+      }
+
+      /* Theme Toggle Button */
+      .theme-toggle {
+        background: none;
+        border: 1px solid var(--sidebar-border);
+        color: var(--text-muted);
+        padding: 0.5rem;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+        margin-bottom: 1.5rem;
+        width: 100%;
+        gap: 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .theme-toggle:hover {
+        background-color: var(--nav-link-hover-bg);
+        color: var(--text-main);
+      }
+
+      [data-bs-theme="dark"] .theme-toggle i.bi-sun-fill {
+        display: block;
+      }
+      [data-bs-theme="dark"] .theme-toggle i.bi-moon-stars-fill {
+        display: none;
+      }
+      [data-bs-theme="light"] .theme-toggle i.bi-sun-fill {
+        display: none;
+      }
+      [data-bs-theme="light"] .theme-toggle i.bi-moon-stars-fill {
+        display: block;
+      }
+
+      /* Mobile Header Improvements */
+      .navbar-mobile {
+        background-color: var(--sidebar-bg);
+        border-bottom: 1px solid var(--sidebar-border);
+        padding: 0.75rem 1.25rem;
+        backdrop-filter: blur(10px);
+        background-color: rgba(var(--sidebar-bg-rgb, 255, 255, 255), 0.8);
+      }
+
+      [data-bs-theme="dark"] .navbar-mobile {
+        background-color: rgba(15, 23, 42, 0.8);
+      }
+
+      .offcanvas {
+        background-color: var(--sidebar-bg);
+        border-right: 1px solid var(--sidebar-border);
+      }
+
+      /* Card & Component Styles */
+      .card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--sidebar-border);
+        border-radius: 1rem;
+        transition: var(--transition);
       }
     </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-      <div class="container">
-        <a class="navbar-brand" href="/">Billing System</a>
-        <div class="navbar-nav ms-auto align-items-center">
-          {% if user.is_authenticated %}
-          <a class="nav-link fw-medium" href="{% url 'invoice_create' %}"
-            >Create New</a
-          >
-          <a class="nav-link fw-medium" href="{% url 'invoice_list' %}"
-            >All Quotations</a
-          >
-          <span class="text-secondary mx-2">|</span>
-          <span class="navbar-text fw-bold text-dark me-3"
-            >Hi, {{ user.username }}</span
-          >
-          <form action="{% url 'logout' %}" method="post" class="d-inline">
+    <!-- Sidebar -->
+    <div class="sidebar d-none d-md-flex">
+      <a class="navbar-brand" href="/">
+        <i class="bi bi-receipt"></i>
+        <span>Billing System</span>
+      </a>
+
+      <button class="theme-toggle" id="themeToggle">
+        <i class="bi bi-sun-fill"></i>
+        <i class="bi bi-moon-stars-fill"></i>
+        <span id="themeToggleText">Light Mode</span>
+      </button>
+
+      <nav class="nav flex-column mb-auto">
+        {% if user.is_authenticated %}
+        <a
+          class="nav-link {% if request.resolver_match.url_name == 'invoice_list' %}active{% endif %}"
+          href="{% url 'invoice_list' %}"
+        >
+          <i class="bi bi-grid-1x2-fill"></i> Dashboard
+        </a>
+        <a
+          class="nav-link {% if request.resolver_match.url_name == 'invoice_create' %}active{% endif %}"
+          href="{% url 'invoice_create' %}"
+        >
+          <i class="bi bi-plus-circle-fill"></i> Create New
+        </a>
+        <a
+          class="nav-link {% if request.resolver_match.url_name == 'analytics' %}active{% endif %}"
+          href="{% url 'analytics' %}"
+        >
+          <i class="bi bi-pie-chart-fill"></i> Analytics
+        </a>
+        {% else %}
+        <a class="nav-link" href="{% url 'login' %}">
+          <i class="bi bi-box-arrow-in-right"></i> Login
+        </a>
+        {% endif %}
+      </nav>
+
+      {% if user.is_authenticated %}
+      <div class="user-profile">
+        <div class="user-avatar">{{ user.username|first|upper }}</div>
+        <div class="overflow-hidden">
+          <div class="fw-semibold text-truncate">{{ user.username }}</div>
+          <form action="{% url 'logout' %}" method="post">
             {% csrf_token %}
             <button
               type="submit"
-              class="nav-link btn btn-link fw-medium text-danger border-0 bg-transparent p-0"
+              class="btn btn-link p-0 text-muted text-decoration-none"
+              style="font-size: 0.825rem; font-weight: 500"
             >
-              Logout
+              Sign out
             </button>
           </form>
-          {% else %}
-          <a class="nav-link fw-medium" href="{% url 'login' %}">Login</a>
-          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Mobile Header -->
+    <nav class="navbar navbar-mobile d-md-none fixed-top">
+      <div class="container-fluid px-0">
+        <a
+          class="navbar-brand mb-0 py-0"
+          href="/"
+          style="margin-bottom: 0; font-size: 1.25rem"
+        >
+          <i class="bi bi-receipt"></i>
+        </a>
+
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-link text-muted p-2" id="themeToggleMobile">
+            <i class="bi bi-sun-fill d-none-dark"></i>
+            <i class="bi bi-moon-stars-fill d-none-light"></i>
+          </button>
+
+          <button
+            class="navbar-toggler border-0 p-2 shadow-none"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mobileMenu"
+          >
+            <i class="bi bi-list fs-3 text-muted"></i>
+          </button>
+        </div>
+
+        <div class="collapse navbar-collapse mt-3" id="mobileMenu">
+          <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body p-2">
+              {% if user.is_authenticated %}
+              <div
+                class="user-profile mb-3 p-2 border-bottom d-flex align-items-center gap-3"
+              >
+                <div class="user-avatar" style="width: 38px; height: 38px">
+                  {{ user.username|first|upper }}
+                </div>
+                <div class="fw-semibold text-truncate">{{ user.username }}</div>
+              </div>
+              {% endif %}
+              <ul class="navbar-nav gap-1">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                  <a
+                    class="nav-link {% if request.resolver_match.url_name == 'invoice_list' %}active{% endif %}"
+                    href="{% url 'invoice_list' %}"
+                  >
+                    <i class="bi bi-grid-1x2-fill"></i> Dashboard
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link {% if request.resolver_match.url_name == 'invoice_create' %}active{% endif %}"
+                    href="{% url 'invoice_create' %}"
+                  >
+                    <i class="bi bi-plus-circle-fill"></i> Create New
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link {% if request.resolver_match.url_name == 'analytics' %}active{% endif %}"
+                    href="{% url 'analytics' %}"
+                  >
+                    <i class="bi bi-pie-chart-fill"></i> Analytics
+                  </a>
+                </li>
+                <li class="nav-item border-top mt-2 pt-2">
+                  <form
+                    action="{% url 'logout' %}"
+                    method="post"
+                    class="d-inline"
+                  >
+                    {% csrf_token %}
+                    <button
+                      type="submit"
+                      class="nav-link btn btn-link text-start w-100 border-0"
+                    >
+                      <i class="bi bi-box-arrow-left"></i> Logout
+                    </button>
+                  </form>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'login' %}">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                  </a>
+                </li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </nav>
 
-    <div class="container main-container">
-      {% block content %}{% endblock %}
+    <!-- Main Content -->
+    <div class="main-container">
+      <!-- Spacer for mobile fixed header -->
+      <div class="d-md-none" style="height: 64px"></div>
+
+      {% if messages %}
+      <div class="messages-container">
+        {% for message in messages %}
+        <div
+          class="alert alert-{{ message.tags }} alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4"
+          role="alert"
+        >
+          <div class="d-flex align-items-center gap-2">
+            {% if message.tags == 'success' %}<i
+              class="bi bi-check-circle-fill"
+            ></i
+            >{% endif %} {% if message.tags == 'error' %}<i
+              class="bi bi-exclamation-triangle-fill"
+            ></i
+            >{% endif %} {{ message }}
+          </div>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% block content %}{% endblock %}
     </div>
 
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Theme Toggle Script -->
+    <script>
+      const getStoredTheme = () => localStorage.getItem("theme");
+      const setStoredTheme = (theme) => localStorage.setItem("theme", theme);
+      const getPreferredTheme = () => {
+        const storedTheme = getStoredTheme();
+        if (storedTheme) return storedTheme;
+        return window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+      };
+
+      const setTheme = (theme) => {
+        if (
+          theme === "auto" &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+        ) {
+          document.documentElement.setAttribute("data-bs-theme", "dark");
+        } else {
+          document.documentElement.setAttribute("data-bs-theme", theme);
+        }
+
+        // Update UI
+        const themeText = document.getElementById("themeToggleText");
+        const themeIcon = document.querySelector("#themeToggle i:first-child");
+
+        if (theme === "dark") {
+          if (themeText) themeText.innerText = "Dark Mode";
+        } else {
+          if (themeText) themeText.innerText = "Light Mode";
+        }
+      };
+
+      setTheme(getPreferredTheme());
+
+      const handleThemeToggle = () => {
+        const currentTheme =
+          document.documentElement.getAttribute("data-bs-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        setStoredTheme(newTheme);
+        setTheme(newTheme);
+      };
+
+      document
+        .getElementById("themeToggle")
+        ?.addEventListener("click", handleThemeToggle);
+      document
+        .getElementById("themeToggleMobile")
+        ?.addEventListener("click", handleThemeToggle);
+    </script>
   </body>
 </html>

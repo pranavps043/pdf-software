@@ -14,7 +14,7 @@
           bottom: 0cm;
           margin-left: 0.5cm;
           margin-right: 0.5cm;
-          height: 2cm;
+          height: 1cm;
         }
       }
       body {
@@ -106,52 +106,17 @@
       <tr>
         <!-- Logo Section (Left) -->
         <td style="width: 60%; vertical-align: top">
-          <table style="width: 100%">
-            <tr>
-              <td style="width: 60px; vertical-align: middle">
-                <!-- Improved Logo Placeholder -->
-                <div
-                  style="
-                    color: #366092;
-                    font-size: 45pt;
-                    line-height: 1;
-                    font-weight: bold;
-                  "
-                >
-                  T
-                </div>
-              </td>
-              <td style="vertical-align: middle">
-                <span
-                  style="
-                    color: #c00000;
-                    font-size: 20pt;
-                    font-weight: bold;
-                    display: block;
-                  "
-                  >TECHNO TECH</span
-                >
-                <span
-                  style="color: #366092; font-size: 9pt; letter-spacing: 1px"
-                  >Technologies</span
-                >
-              </td>
-            </tr>
-          </table>
+          <img
+            src="D:\billing\billing_system\media\images\technotech_log.png"
+            style="height: 80px; width: auto"
+          />
         </td>
         <!-- Date/Ref Section (Right) -->
         <td style="width: 40%; vertical-align: top; text-align: right">
-          <br />
-          <table style="width: 100%">
-            <tr>
-              <td class="text-right"><strong>Date:</strong></td>
-              <td class="text-right">{{ invoice.date|date:"d-m-Y" }}</td>
-            </tr>
-            <tr>
-              <td class="text-right"><strong>Ref No:</strong></td>
-              <td class="text-right">{{ invoice.reference_no }}</td>
-            </tr>
-          </table>
+          <div style="font-size: 10pt">
+            <strong>Date:</strong>&nbsp;{{ invoice.date|date:"d-m-Y" }}<br />
+            <strong>Ref No:</strong>&nbsp;{{ invoice.reference_no }}
+          </div>
         </td>
       </tr>
     </table>

@@ -1,54 +1,102 @@
 {% if invoices.paginator.count %}
-<div class="table-responsive">
-  <table class="table table-hover align-middle">
-    <thead class="table-light">
-      <tr>
-        <th>#</th>
+<div class="table-responsive d-none d-md-block">
+  <table class="table table-hover align-middle border-top">
+    <thead>
+      <tr class="text-muted small text-uppercase">
+        <th class="ps-3">#</th>
         <th>Client</th>
-        <th>Invoice No</th>
-        <th>Ref No</th>
+        <th>Invoice / Ref No</th>
         <th>Date</th>
         <th>Amount (AED)</th>
-        <th>Action</th>
+        <th class="text-end pe-3">Action</th>
       </tr>
     </thead>
     <tbody>
       {% for invoice in invoices %}
       <tr>
-        <td>{{ forloop.counter }}</td>
-        <td>{{ invoice.client_name }}</td>
+        <td class="ps-3 text-muted">{{ forloop.counter }}</td>
         <td>
-          <span class="badge bg-light text-dark border">
-            {{ invoice.invoice_number }}
-          </span>
+          <div
+            class="fw-bold text-dark"
+            style="color: var(--text-main) !important"
+          >
+            {{ invoice.client_name }}
+          </div>
         </td>
-        <td>{{ invoice.reference_no }}</td>
-        <td>{{ invoice.date|date:"M d, Y" }}</td>
-        <td class="fw-bold">{{ invoice.amount }}</td>
         <td>
-          <div class="d-flex gap-2">
-            <div class="btn-group btn-group-sm">
-              <a
-                href="{% url 'generate_pdf' invoice.id %}"
-                class="btn btn-outline-primary"
-                >Inv</a
-              >
-              <a
-                href="{% url 'generate_quotation' invoice.id %}"
-                class="btn btn-primary"
-                >Qt</a
-              >
-            </div>
-            <a
-              href="{% url 'invoice_update' invoice.id %}"
-              class="btn btn-outline-secondary btn-sm"
-              >Edit</a
+          <div class="d-flex flex-column">
+            <span
+              class="badge bg-light text-dark border fw-medium mb-1"
+              style="
+                width: fit-content;
+                background-color: var(--nav-link-hover-bg) !important;
+                color: var(--text-main) !important;
+                border-color: var(--sidebar-border) !important;
+              "
             >
-            <a
-              href="{% url 'invoice_delete' invoice.id %}"
-              class="btn btn-outline-danger btn-sm"
-              >Del</a
+              {{ invoice.invoice_number }}
+            </span>
+            <small class="text-muted">{{ invoice.reference_no }}</small>
+          </div>
+        </td>
+        <td class="text-muted small">{{ invoice.date|date:"M d, Y" }}</td>
+        <td>
+          <span
+            class="fw-bold text-dark"
+            style="color: var(--text-main) !important"
+            >{{ invoice.amount }}</span
+          >
+        </td>
+        <td class="text-end pe-3">
+          <div class="dropdown">
+            <button
+              class="btn btn-light btn-sm rounded-3 border-0"
+              type="button"
+              data-bs-toggle="dropdown"
+              data-bs-boundary="viewport"
+              aria-expanded="false"
+              style="
+                background-color: var(--nav-link-hover-bg);
+                color: var(--text-main);
+              "
             >
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            <ul
+              class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 p-2"
+            >
+              <li>
+                <a
+                  class="dropdown-item rounded-2 py-2"
+                  href="{% url 'generate_pdf' invoice.id %}"
+                  ><i class="bi bi-file-earmark-pdf me-2 text-danger"></i
+                  >Invoice PDF</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item rounded-2 py-2"
+                  href="{% url 'generate_quotation' invoice.id %}"
+                  ><i class="bi bi-file-earmark-text me-2 text-primary"></i
+                  >Quotation PDF</a
+                >
+              </li>
+              <li><hr class="dropdown-divider opacity-50" /></li>
+              <li>
+                <a
+                  class="dropdown-item rounded-2 py-2"
+                  href="{% url 'invoice_update' invoice.id %}"
+                  ><i class="bi bi-pencil me-2 text-muted"></i>Edit</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item rounded-2 py-2 text-danger"
+                  href="{% url 'invoice_delete' invoice.id %}"
+                  ><i class="bi bi-trash me-2"></i>Delete</a
+                >
+              </li>
+            </ul>
           </div>
         </td>
       </tr>
@@ -56,10 +104,103 @@
     </tbody>
   </table>
 </div>
+
+<!-- Mobile Card-Style List -->
+<div class="d-md-none d-flex flex-column gap-3">
+  {% for invoice in invoices %}
+  <div
+    class="card border-0 shadow-sm rounded-4"
+    style="
+      background-color: var(--card-bg);
+      border: 1px solid var(--sidebar-border) !important;
+    "
+  >
+    <div class="card-body p-3">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <div>
+          <h6
+            class="fw-bold mb-0 text-dark"
+            style="color: var(--text-main) !important"
+          >
+            {{ invoice.client_name }}
+          </h6>
+          <span class="text-muted small">{{ invoice.date|date:"M d, Y" }}</span>
+        </div>
+        <span
+          class="badge bg-light text-dark border px-2 py-1"
+          style="
+            background-color: var(--nav-link-hover-bg) !important;
+            color: var(--text-main) !important;
+            border-color: var(--sidebar-border) !important;
+          "
+        >
+          {{ invoice.invoice_number }}
+        </span>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="text-muted small">Ref: {{ invoice.reference_no }}</div>
+        <div
+          class="fw-bold text-primary fs-5"
+          style="color: var(--accent-color) !important"
+        >
+          AED {{ invoice.amount }}
+        </div>
+      </div>
+
+      <div class="row g-2">
+        <div class="col-6">
+          <a
+            href="{% url 'generate_pdf' invoice.id %}"
+            class="btn btn-outline-danger btn-sm w-100 rounded-3 d-flex align-items-center justify-content-center gap-1"
+          >
+            <i class="bi bi-file-pdf"></i> Invoice
+          </a>
+        </div>
+        <div class="col-6">
+          <a
+            href="{% url 'generate_quotation' invoice.id %}"
+            class="btn btn-primary btn-sm w-100 rounded-3 d-flex align-items-center justify-content-center gap-1"
+          >
+            <i class="bi bi-file-text"></i> Quote
+          </a>
+        </div>
+        <div class="col-6">
+          <a
+            href="{% url 'invoice_update' invoice.id %}"
+            class="btn btn-light btn-sm w-100 rounded-3 d-flex align-items-center justify-content-center gap-2 border text-muted"
+            style="
+              background-color: var(--card-bg);
+              border-color: var(--input-border) !important;
+            "
+          >
+            <i class="bi bi-pencil"></i> Edit
+          </a>
+        </div>
+        <div class="col-6">
+          <a
+            href="{% url 'invoice_delete' invoice.id %}"
+            class="btn btn-outline-danger btn-sm w-100 rounded-3 d-flex align-items-center justify-content-center gap-2"
+          >
+            <i class="bi bi-trash"></i> Delete
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
 {% else %}
 <div class="text-center py-5">
+  <div class="mb-3">
+    <i class="bi bi-inboxes text-muted" style="font-size: 3rem"></i>
+  </div>
   <p class="text-muted">No quotations found.</p>
-  <a href="{% url 'invoice_create' %}" class="btn btn-primary btn-sm">
+  <a
+    href="{% url 'invoice_create' %}"
+    class="btn btn-primary rounded-3 px-4 fw-semibold"
+  >
     Create First Quotation
   </a>
 </div>
@@ -68,33 +209,56 @@
 <!-- Pagination -->
 {% if invoices.has_other_pages %}
 <nav class="mt-4">
-  <ul class="pagination justify-content-center">
+  <ul class="pagination justify-content-center pagination-sm">
     <!-- Previous -->
     {% if invoices.has_previous %}
     <li class="page-item">
       <a
-        class="page-link"
+        class="page-link rounded-3 mx-1"
         href="?page={{ invoices.previous_page_number }}&search={{ search_query }}&date_from={{ date_from }}&date_to={{ date_to }}"
+        style="
+          background-color: var(--card-bg);
+          color: var(--text-main);
+          border-color: var(--sidebar-border);
+        "
       >
         &laquo;
       </a>
     </li>
     {% else %}
-    <li class="page-item disabled">
-      <span class="page-link">&laquo;</span>
+    <li class="page-item disabled mx-1">
+      <span
+        class="page-link rounded-3"
+        style="
+          background-color: var(--card-bg);
+          border-color: var(--sidebar-border);
+        "
+        >&laquo;</span
+      >
     </li>
     {% endif %}
 
     <!-- Page Numbers -->
     {% for i in invoices.paginator.page_range %} {% if invoices.number == i %}
-    <li class="page-item active">
-      <span class="page-link">{{ i }}</span>
+    <li class="page-item active mx-1">
+      <span
+        class="page-link rounded-3"
+        style="
+          background-color: var(--accent-color);
+          border-color: var(--accent-color);
+        "
+        >{{ i }}</span
+      >
     </li>
     {% else %}
-    <li class="page-item">
+    <li class="page-item mx-1">
       <a
-        class="page-link"
+        class="page-link rounded-3 text-muted"
         href="?page={{ i }}&search={{ search_query }}&date_from={{ date_from }}&date_to={{ date_to }}"
+        style="
+          background-color: var(--card-bg);
+          border-color: var(--sidebar-border);
+        "
       >
         {{ i }}
       </a>
@@ -103,17 +267,29 @@
 
     <!-- Next -->
     {% if invoices.has_next %}
-    <li class="page-item">
+    <li class="page-item mx-1">
       <a
-        class="page-link"
+        class="page-link rounded-3"
         href="?page={{ invoices.next_page_number }}&search={{ search_query }}&date_from={{ date_from }}&date_to={{ date_to }}"
+        style="
+          background-color: var(--card-bg);
+          color: var(--text-main);
+          border-color: var(--sidebar-border);
+        "
       >
         &raquo;
       </a>
     </li>
     {% else %}
-    <li class="page-item disabled">
-      <span class="page-link">&raquo;</span>
+    <li class="page-item disabled mx-1">
+      <span
+        class="page-link rounded-3"
+        style="
+          background-color: var(--card-bg);
+          border-color: var(--sidebar-border);
+        "
+        >&raquo;</span
+      >
     </li>
     {% endif %}
   </ul>

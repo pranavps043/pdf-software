@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-27f72siw99w+c1t!b#$sf=b(dm*c6-!)!6k^3&r4(d--yan^8$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ["*", "tall-bars-brush.loca.lt"]
+
 
 
 # Application definition
@@ -47,7 +48,6 @@ LOGIN_URL = 'login'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -128,9 +128,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CSRF_TRUSTED_ORIGINS = [
+    "https://tall-bars-brush.loca.lt",
+    "https://*.loca.lt",
+]
